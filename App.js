@@ -39,7 +39,7 @@ export default function App() {
         <Text style={[AppStyles.lightText]}>Don't have an account? </Text>
         <InlineTextButton text='Sign Up'/>
         </View>
-        <View style={AppStyles.rowContainer}>
+        <View style={[AppStyles.rowContainer,AppStyles.marginBottom]}>
         <Text style={[AppStyles.lightText]}>Forgotten your password? </Text>
         <InlineTextButton text='Reset'/>
         </View>

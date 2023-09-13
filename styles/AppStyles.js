@@ -42,5 +42,8 @@ export default styles = StyleSheet.create({
     alignItems:'center',
     justifyContent:"center",
     marginVertical:4
+  },
+  marginBottom:{
+    marginBottom:15
   }
 });
