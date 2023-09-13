@@ -4,7 +4,7 @@ export default styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-    alignItems: "center",
+    // alignItems: "center",
     justifyContent: "center",
   },
   bacgroundCover: {
@@ -14,6 +14,16 @@ export default styles = StyleSheet.create({
     backgroundColor: "#908599",
     padding: 16,
     opacity: 0.6,
+    margin:8,
+    borderRadius:12,
+    shadowColor: '#372549D',
+  shadowRadius: 10,
+  shadowOpacity: 0.6,
+  elevation: 8,
+  shadowOffset: {
+    width: 0,
+    height: 4
+  }
   },
   lightText: {
     color: "#fff",
