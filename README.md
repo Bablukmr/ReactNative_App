@@ -28,3 +28,31 @@ Use appropriate components for UI elements like buttons, lists, and input fields
 Ensure a clean and organized project structure.
 Include comments in your code to explain important sections.
 
+# TodoApp
+
+## Overview
+
+TodoApp is a mobile application built using React Native and Firebase, allowing users to manage their tasks efficiently.
+
+## Table of Contents
+
+1. [Getting Started](#getting-started)
+2. [Prerequisites](#prerequisites)
+3. [Installation](#installation)
+4. [Usage](#usage)
+5. [Dependencies](#dependencies)
+6. [Contributing](#contributing)
+7. [License](#license)
+
+## Getting Started
+
+To get started with TodoApp, follow these steps:
+
+## Prerequisites
+
+- Ensure you have Node.js and npm (Node Package Manager) installed on your system. You can download them from [here](https://nodejs.org/).
+
+- Install Expo CLI globally by running the following command:
+
+  ```bash
+  npm install -g expo-cli
