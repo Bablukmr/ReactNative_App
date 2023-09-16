@@ -1,4 +1,4 @@
-### To-Do List App with React Native
+# To-Do List App with React Native
 This is a To-Do list application for Android and iOS built using React Native. It allows users to manage their tasks efficiently, providing features like user registration, task creation, completion tracking, and more.
 
 Table of Contents
@@ -11,7 +11,7 @@ Dependencies
 Contributing
 License
 Task Description
-## 1. Task Description:
+### 1. Task Description:
 Build a To-Do list application for Android and iOS using React Native. The app should allow users to:
 
 Register for an account with an email and password.
@@ -20,19 +20,11 @@ Add tasks with a title and description.
 Mark tasks as completed.
 Delete tasks.
 View a list of tasks with their status.
-2. Technical Requirements:
+### 2. Technical Requirements:
 Use React Native for building the app.
 Implement user authentication (you can use libraries like Firebase Authentication or implement a basic authentication system).
 Implement state management (you can choose between React's built-in state or a state management library like Redux).
 Use appropriate components for UI elements like buttons, lists, and input fields.
 Ensure a clean and organized project structure.
 Include comments in your code to explain important sections.
-3. Bonus (Optional):
-If you want to showcase additional skills, consider:
 
-Adding task due dates.
-Implementing task categories or tags.
-Implementing sorting or filtering tasks.
-Creating a backend API using Node.js or Nest.js with MongoDB as the database.
-Designing a visually appealing user interface with special consideration for cool and creative design.
-Implementing any additional features you believe would enhance the app's functionality or user experience.
