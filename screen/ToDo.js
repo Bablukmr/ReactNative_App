@@ -1,56 +1,71 @@
-import React from 'react';
-import AppStyles from "../styles/TodoStyle";
-import InlineTextButton from "../components/inlineTextButton";
-import { View, Button, Text, Modal, SafeAreaView, ActivityIndicator, FlatList } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, Modal, SafeAreaView, ActivityIndicator, FlatList, Button } from 'react-native';
 import { auth, db } from "../firebase";
 import { collection, addDoc, query, where, getDocs, deleteDoc, doc, setDoc } from "firebase/firestore"; 
 import { sendEmailVerification } from 'firebase/auth';
 import AddToDoModal from '../components/AddToDoModal';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 
-export default function ToDo({ navigation }) {
-  let [modalVisible, setModalVisible] = React.useState(false);
-  let [isLoading, setIsLoading] = React.useState(true);
-  let [isRefreshing, setIsRefreshing] = React.useState(false);
-  let [toDos, setToDos] = React.useState([]);
+// Import your AppStyles here
+import AppStyles from "../styles/TodoStyle";
+import InlineTextButton from "../components/inlineTextButton";
 
-  let loadToDoList = async () => {
+export default function ToDo({ navigation }) {
+  const [modalVisible, setModalVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [toDos, setToDos] = useState([]);
+
+  useEffect(() => {
+    loadToDoList();
+  }, []);
+
+  const loadToDoList = async () => {
     const q = query(collection(db, "todos"), where("userId", "==", auth.currentUser.uid));
 
-    const querySnapshot = await getDocs(q);
-    let toDos = [];
-    querySnapshot.forEach((doc) => {
-      let toDo = doc.data();
-      toDo.id = doc.id;
-      toDos.push(toDo);
-    });
+    try {
+      const querySnapshot = await getDocs(q);
+      const toDosData = [];
+      querySnapshot.forEach((doc) => {
+        let toDo = doc.data();
+        toDo.id = doc.id;
+        toDosData.push(toDo);
+      });
 
-    setToDos(toDos);
-    setIsLoading(false);
-    setIsRefreshing(false);
+      setToDos(toDosData);
+    } catch (error) {
+      console.error('Error loading ToDo list:', error);
+    } finally {
+      setIsLoading(false);
+      setIsRefreshing(false);
+    }
   };
 
-  if (isLoading) {
-    loadToDoList();
-  }
-
-  let checkToDoItem = (item, isChecked) => {
+  const checkToDoItem = async (item, isChecked) => {
     const toDoRef = doc(db, 'todos', item.id);
-    setDoc(toDoRef, { completed: isChecked }, { merge: true });
+    try {
+      await setDoc(toDoRef, { completed: isChecked }, { merge: true });
+    } catch (error) {
+      console.error('Error updating ToDo item:', error);
+    }
   };
 
-  let deleteToDo = async (toDoId) => {
-    await deleteDoc(doc(db, "todos", toDoId));
-    let updatedToDos = [...toDos].filter((item) => item.id != toDoId);
-    setToDos(updatedToDos);
+  const deleteToDo = async (toDoId) => {
+    try {
+      await deleteDoc(doc(db, "todos", toDoId));
+      const updatedToDos = toDos.filter((item) => item.id !== toDoId);
+      setToDos(updatedToDos);
+    } catch (error) {
+      console.error('Error deleting ToDo item:', error);
+    }
   };
 
-  let renderToDoItem = ({item}) => {
+  const renderToDoItem = ({ item }) => {
     return (
       <View style={[AppStyles.rowContainer, AppStyles.rightMargin, AppStyles.leftMargin]}>
         <View style={AppStyles.fillSpace}>
           <BouncyCheckbox
-            isChecked={item.complated}
+            isChecked={item.completed}
             size={25}
             fillColor="#258ea6"
             unfillColor="#FFFFFF"
@@ -62,9 +77,9 @@ export default function ToDo({ navigation }) {
         <InlineTextButton text="Delete" color="#258ea6" onPress={() => deleteToDo(item.id)} />
       </View>
     );
-  }
+  };
 
-  let showToDoList = () => {
+  const showToDoList = () => {
     return (
       <FlatList
         data={toDos}
@@ -78,7 +93,7 @@ export default function ToDo({ navigation }) {
     )
   };
 
-  let showContent = () => {
+  const showContent = () => {
     return (
       <View>
         {isLoading ? <ActivityIndicator size="large" /> : showToDoList() }
@@ -90,7 +105,7 @@ export default function ToDo({ navigation }) {
     );
   };
 
-  let showSendVerificationEmail = () => {
+  const showSendVerificationEmail = () => {
     return (
       <View>
         <Text>Please verify your email to use ToDo</Text>
@@ -99,20 +114,23 @@ export default function ToDo({ navigation }) {
     );
   };
 
-  let addToDo = async (todo) => {
-    let toDoToSave = {
+  const addToDo = async (todo) => {
+    const toDoToSave = {
       text: todo,
       completed: false,
-      userId: auth.currentUser.uid
+      userId: auth.currentUser.uid,
     };
-    const docRef = await addDoc(collection(db, "todos"), toDoToSave);
+    try {
+      const docRef = await addDoc(collection(db, "todos"), toDoToSave);
+      toDoToSave.id = docRef.id;
 
-    toDoToSave.id = docRef.id;
+      const updatedToDos = [...toDos];
+      updatedToDos.push(toDoToSave);
 
-    let updatedToDos = [...toDos];
-    updatedToDos.push(toDoToSave);
-
-    setToDos(updatedToDos);
+      setToDos(updatedToDos);
+    } catch (error) {
+      console.error('Error adding ToDo item:', error);
+    }
   };
   
   return (
@@ -125,6 +143,7 @@ export default function ToDo({ navigation }) {
         transparent={true}
         visible={modalVisible}
         onRequestClose={() => setModalVisible(false)}>
+        {/* Include your AddToDoModal component here */}
         <AddToDoModal 
           onClose={() => setModalVisible(false)}
           addToDo={addToDo} />
